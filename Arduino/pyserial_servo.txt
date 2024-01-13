@@ -1,0 +1,57 @@
+#include <Servo.h>
+
+Servo servo1;  
+Servo servo2; 
+String inString = "";  // string to hold input
+
+void setup() {
+  servo1.attach(2);
+  servo2.attach(4);  // Assuming servo2 is connected to pin 3
+  // Open serial communications and wait for port to open:
+  Serial.begin(115200);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+
+  // Send an intro:
+  Serial.println("\n\nString toInt():");
+  Serial.println();
+}
+
+void loop() {
+  // Read serial input:
+  while (Serial.available() > 0) {
+    char inChar = Serial.read();
+    
+    // Check if the character is a digit or a comma
+    if (isDigit(inChar) || inChar == ',') {
+      // Add the character to the string:
+      inString += inChar;
+    }
+    
+    // If you get a newline, process the input:
+    if (inChar == '\n') {
+      // Split the string into two parts using ',' as a delimiter
+      int commaIndex = inString.indexOf(',');
+      if (commaIndex != -1) {
+        String value1 = inString.substring(0, commaIndex);
+        String value2 = inString.substring(commaIndex + 1);
+
+        // Convert the two substrings to integers and control the servos
+        int intValue1 = value1.toInt();
+        int intValue2 = value2.toInt();
+
+        Serial.print("Value 1: ");
+        Serial.println(intValue1);
+        Serial.print("Value 2: ");
+        Serial.println(intValue2);
+
+        servo1.write(intValue1);
+        servo2.write(intValue2);
+      }
+
+      // Clear the string for new input:
+      inString = "";
+    }
+  }
+}

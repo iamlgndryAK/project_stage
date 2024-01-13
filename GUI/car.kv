@@ -1,0 +1,213 @@
+<Grid>
+    GridLayout:
+        id: main_grid
+        cols: 1
+        size: root.width, root.height
+ 
+
+        GridLayout:
+            id: top_grid
+            cols: 1
+            size_hint: (1, 0.3)
+            Label:
+                id: name_label
+                text: "Vehicle Control and Monitoring Panel"
+                font_size: 50
+                color: 0.9608, 0.8706, 0.702, 1
+
+
+        GridLayout:
+            id: top_grid
+            cols: 3
+            size_hint: (2, 0.6)
+
+            ProgressBar:
+                id: loading_bar
+                max: 100
+                value: 0
+                size_hint_y: None
+                height: 200
+
+            Video:
+                id: video
+                source: 'http://192.168.43.1:8080/video'
+                state: "play"
+                allow_stretch: True
+                options: {"eos": "loop"}
+
+            Label:
+                id: percentage_label
+                text: "P"
+                font_size: 50
+                color: 0.9608, 0.8706, 0.702, 1
+
+                   
+
+
+        GridLayout:
+            id: control_grid
+            cols: 5
+
+            GridLayout:
+                id: w1
+                Scatter:
+                    size: w1.size
+                    rotation: 90
+                    do_rotation: False
+                    do_translation: False
+                    Label:
+
+                        text: ""
+
+            GridLayout:
+                id: control_grid
+                cols: 1
+                size_hint: (0.25, 1)
+
+                Label:
+                    id: name_label
+                    text: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    background_color: (0, 1, 0, 1)
+
+                Label:
+                    id: name_label
+                    text: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    background_color: (1, 0, 0, 1)
+                Label:
+                    id: name_label
+                    text: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    background_color: (0, 0, 1, 1)
+                Label:
+                    id: name_label
+                    text: ""
+
+                    canvas.before:
+                        Color:
+                            rgba: self.background_color
+                        Rectangle:
+                            size: self.size
+                            pos: self.pos
+
+                    background_color: (1, 1, 0, 1)
+
+            GridLayout:
+                id: control_grid
+                cols: 1
+
+                Label:
+                    id: name_label
+                    text: "IR Sensor"
+                Label:
+                    id: name_label
+                    text: "proximit sensor"
+                Label:
+                    id: name_label
+                    text: "accelerometer"
+                Label:
+                    id: name_label
+                    text: "smoke sensor"
+
+
+
+            GridLayout:
+                id: control_grid
+                cols: 3
+                Label:
+                    id: name_label
+                    text: ""
+                Button:
+                    id: button
+                    text: "forward"
+                    on_press: root.forward_press(self)
+                    on_release: root.forward_release(self)
+                Label:
+                    id: name_label
+                    text: ""
+                Button:
+                    id: button
+                    text: "Left"
+                    on_press: root.left_press(self)
+                    on_release: root.left_release(self)
+                    
+
+                    border: 2, 2, 2, 2
+                    border_color: 1, 0, 0, 1
+                    border_width: 2
+                    border_radius: [15]
+                    size_hint: (0.3, 0.1)
+                    pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                Label:
+                    id: name_label
+                    text: ""
+                Button:
+                    id: button
+                    text: "right"
+                    on_press: root.right_press(self)
+                    on_release: root.right_release(self)
+                Label:
+                    id: name_label
+                    text: ""
+                Button:
+                    id: button
+                    text: "backward"
+                    on_press: root.backward_press(self)
+                    on_release: root.backward_release(self)
+
+            BoxLayout:
+                orientation: 'vertical'
+                padding: 20
+
+                GridLayout:
+                    id: control_grid
+                    cols: 2
+
+                    Button:
+                        id: rot_left_button
+                        text: "Rot"
+                        on_release: root.on_rot_left_button_press()
+                    Button:
+                        id: rot_right_button
+                        text: "Rot"
+                        on_release: root.on_rot_right_button_press()
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: 10
+
+                    Button:
+                        id: fire_button
+                        text: "Fire"
+                        background_normal: ''
+
+                        background_color: 0, 0, 1, 1
+
+
+
+                Label:
+                    id: name_label
+                    text: "Turret Control"
+
+

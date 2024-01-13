@@ -1,0 +1,182 @@
+#include <AFMotor.h>
+#include <Servo.h>
+
+Servo servo1;  
+Servo servo2;
+
+AF_DCMotor motor1(1);
+AF_DCMotor motor2(2);
+AF_DCMotor motor3(3);
+AF_DCMotor motor4(4);
+
+
+String inString = "";
+
+enum MotorState {
+  STOPPED,
+  MOVE_FORWARD,
+  MOVE_BACKWARD,
+  MOVE_LEFT,
+  MOVE_RIGHT
+};
+
+MotorState motorState = STOPPED;
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
+
+  servo1.attach(9);
+  servo2.attach(10);
+
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only
+  }
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char inChar = Serial.read();
+
+    // Check if the character is a digit or a comma
+    if (isDigit(inChar) || inChar == ',') {
+      // Add the character to the string:
+      inString += inChar;
+    }
+
+    // If you get a newline, process the input:
+    if (inChar == '\n') {
+      // Split the string into six parts using ',' as a delimiter
+      int commaIndices[5];
+
+      for (int i = 0; i < 5; ++i) {
+        commaIndices[i] = inString.indexOf(',');
+        if (commaIndices[i] != -1) {
+          inString[commaIndices[i]] = ' ';  // Replace ',' with space to allow sscanf to work
+        }
+      }
+
+      if (commaIndices[0] != -1 && commaIndices[1] != -1 && commaIndices[2] != -1 && commaIndices[3] != -1 && commaIndices[4] != -1) {
+        int intValue1, intValue2, intValue3, intValue4, intValue5, intValue6;
+        sscanf(inString.c_str(), "%d %d %d %d %d %d", &intValue1, &intValue2, &intValue3, &intValue4, &intValue5, &intValue6);
+
+        Serial.print("Value 1: ");
+        Serial.println(intValue1);
+        Serial.print("Value 2: ");
+        Serial.println(intValue2);
+        Serial.print("Value 3: ");
+        Serial.println(intValue3);
+        Serial.print("Value 4: ");
+        Serial.println(intValue4);
+        Serial.print("Value 5: ");
+        Serial.println(intValue5);
+        Serial.print("Value 6: ");
+        Serial.println(intValue6);
+
+        servo1.write(intValue5);
+        servo2.write(intValue6);
+
+        switch (motorState) {
+        case STOPPED:
+          if (intValue1 != 0) {
+            motorState = MOVE_FORWARD;
+            digitalWrite(LED_BUILTIN, HIGH);
+            motor1.run(FORWARD);
+            motor2.run(FORWARD);
+            motor3.run(FORWARD);
+            motor4.run(FORWARD);
+            motor1.setSpeed(intValue1);
+            motor2.setSpeed(intValue1);
+            motor3.setSpeed(intValue1);
+            motor4.setSpeed(intValue1);
+          } else if (intValue2 != 0) {
+            motorState = MOVE_BACKWARD;
+            digitalWrite(LED_BUILTIN, LOW);
+            motor1.run(BACKWARD);
+            motor2.run(BACKWARD);
+            motor3.run(BACKWARD);
+            motor4.run(BACKWARD);
+            motor1.setSpeed(intValue2);
+            motor2.setSpeed(intValue2);
+            motor3.setSpeed(intValue2);
+            motor4.setSpeed(intValue2);
+          } else if (intValue3 > 0) {
+            motorState = MOVE_LEFT;
+            motor1.run(BACKWARD);
+            motor2.run(BACKWARD);
+            motor3.run(FORWARD);
+            motor4.run(FORWARD);
+            motor1.setSpeed(intValue3);
+            motor2.setSpeed(intValue3);
+            motor3.setSpeed(intValue3);
+            motor4.setSpeed(intValue3);
+            digitalWrite(LED_BUILTIN, HIGH);
+          } else if (intValue4 > 0) {
+            motorState = MOVE_RIGHT;
+            motor1.run(FORWARD);
+            motor2.run(FORWARD);
+            motor3.run(BACKWARD);
+            motor4.run(BACKWARD);
+            motor1.setSpeed(intValue4);
+            motor2.setSpeed(intValue4);
+            motor3.setSpeed(intValue4);
+            motor4.setSpeed(intValue4);
+            digitalWrite(LED_BUILTIN, HIGH);
+          } else {
+            digitalWrite(LED_BUILTIN, HIGH);
+          }
+          break;
+
+        case MOVE_FORWARD:
+          if (intValue1 == 0) {
+            motorState = STOPPED;
+            digitalWrite(LED_BUILTIN, LOW);
+            motor1.setSpeed(0);
+            motor2.setSpeed(0);
+            motor3.setSpeed(0);
+            motor4.setSpeed(0);
+          }
+          break;
+
+        case MOVE_BACKWARD:
+          if (intValue2 == 0) {
+            motorState = STOPPED;
+            digitalWrite(LED_BUILTIN, LOW);
+            motor1.setSpeed(0);
+            motor2.setSpeed(0);
+            motor3.setSpeed(0);
+            motor4.setSpeed(0);
+          }
+          break;
+
+        case MOVE_LEFT:
+          if (intValue3 == 0) {
+            motorState = STOPPED;
+            digitalWrite(LED_BUILTIN, LOW);
+            motor1.setSpeed(0);
+            motor2.setSpeed(0);
+            motor3.setSpeed(0);
+            motor4.setSpeed(0);
+          }
+          break;
+        case MOVE_RIGHT:
+          if (intValue4 == 0) {
+            motorState = STOPPED;
+            digitalWrite(LED_BUILTIN, LOW);
+            motor1.setSpeed(0);
+            motor2.setSpeed(0);
+            motor3.setSpeed(0);
+            motor4.setSpeed(0);
+          }
+          break;
+
+        // Add additional cases for other states if needed
+
+        default:
+          break;
+        }
+      }
+      inString = "";
+    }
+  }
+}

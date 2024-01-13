@@ -1,0 +1,36 @@
+int input_1 = 2;
+int input_2 = 3;
+
+int enable_motor_A = 5;
+
+String user;
+int user_value;
+
+void setup() {
+
+  Serial.begin(9600);
+
+  pinMode(input_1, OUTPUT);
+  pinMode(input_2, OUTPUT);
+
+}
+
+void loop() {
+
+  digitalWrite(input_1, HIGH);
+  digitalWrite(input_2, LOW);
+
+
+
+
+  analogWrite(enable_motor_A, 255);
+  delay(5000);
+
+  
+
+  digitalWrite(input_1, LOW);
+  digitalWrite(input_2, HIGH);
+
+
+  delay(5000);
+}
