@@ -1,2 +1,0 @@
-Kivy==2.1.0
-ffpyplayer==4.3.1
