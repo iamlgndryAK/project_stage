@@ -1,0 +1,541 @@
+<Grid>
+
+    do_default_tab: False
+    
+    TabbedPanelItem:
+        text: 'Main Panel'
+        background_color: 0, 1, 1, 1
+
+        GridLayout:
+
+            id: main_grid
+            cols: 1
+            size: root.width, root.height
+    
+
+            GridLayout:
+                id: top_grid
+                cols: 1
+                size_hint: (1, 0.3)
+                Label:
+                    id: name_label
+                    text: "Telepresence System Control Panel"
+                    font_size: 50
+                    color: 0.9608, 0.8706, 0.702, 1
+
+
+            GridLayout:
+                id: top_grid
+                cols: 6
+                size_hint: (2, 0.6)
+
+                Label:
+                    id: ultrasonic_label_2
+                    text: 'left'
+                    size_hint: 0.2, 1
+                    
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 1  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                Button:
+                    id: streaming_button_2
+                    text: 'Streaming OFF'
+                    on_release: root.toggle_streaming_2()
+
+                Image:
+                    id: image_esp
+                    source: ''
+                    size_hint_x: 2
+                    size_hint_y: 1
+                    allow_stretch: True
+
+                Image:
+                    id: image_widget
+                    source: ''
+                    size_hint_x: 2
+                    size_hint_y: 1
+                    allow_stretch: True
+
+                Button:
+                    id: streaming_button
+                    text: 'Streaming OFF'
+                    on_release: root.toggle_streaming()
+
+                Label:
+                    id: ultrasonic_label_4
+                    text: 'right'
+                    size_hint: 0.2, 1
+                    
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 1  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+                
+
+                    
+
+
+            GridLayout:
+                id: control_grid
+                cols: 5
+
+                GridLayout:
+                    id: asasdas
+                    cols: 1
+
+                    Label:
+                        id: infrared_label
+                        text: "0 W/m²"
+                        font_size: 20
+                        color: 0.9608, 0.8706, 0.702, 1
+
+                    Label:
+                        id: proximity_label
+                        text: "P"
+                        font_size: 20
+                        color: 0.9608, 0.8706, 0.702, 1
+
+                    Label:
+                        id: acceleration_label
+                        text: "P"
+                        font_size: 25
+                        color: 0.9608, 0.8706, 0.702, 1
+
+                    Label:
+                        id: smoke_status_label
+                        text: "P"
+                        font_size: 21
+                        color: 0.9608, 0.8706, 0.702, 1
+                        
+                    
+
+                        
+                        
+
+                GridLayout:
+                    id: control_grid
+                    cols: 1
+                    size_hint: (0.25, 1)
+
+                    Label:
+                        id: name_label
+                        text: ""
+
+                        canvas.before:
+                            Color:
+                                rgba: self.background_color
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        background_color: (0, 1, 0, 0.5)
+
+                    Label:
+                        id: name_label
+                        text: ""
+
+                        canvas.before:
+                            Color:
+                                rgba: self.background_color
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        background_color: (1, 0, 0, 0.5)
+                    Label:
+                        id: name_label
+                        text: ""
+
+                        canvas.before:
+                            Color:
+                                rgba: self.background_color
+                            Rectangle:
+                                size: self.size
+                                pos: self.pos
+
+                        background_color: (0, 0, 1, 0.5)
+                    Label:
+                        id: smoke_label
+                        text: ""
+
+                        canvas.before:
+                            Color:
+                                rgba: 0, 1, 1, 0.5
+                            Rectangle:
+                                pos: self.pos
+                                size: self.size
+
+                        
+
+                GridLayout:
+                    id: control_grid
+                    cols: 1
+
+                    Label:
+                        id: name_label
+                        text: "IR Sensor"
+                    Label:
+                        id: name_label
+                        text: "Proximity Sensor"
+                    Label:
+                        id: name_label
+                        text: "Accelerometer"
+                    Label:
+                        id: smoke_text
+                        text: "smoke sensors"
+
+
+
+                GridLayout:
+                    id: control_grid
+                    cols: 3
+                    Label:
+                        id: name_label
+                        text: ""
+                    Button:
+                        id: button
+                        text: "forward"
+                        on_press: root.forward_press(self)
+                        on_release: root.forward_release(self)
+                    Label:
+                        id: name_label
+                        text: ""
+                    Button:
+                        id: button
+                        text: "Left"
+                        on_press: root.left_press(self)
+                        on_release: root.left_release(self)
+                        
+
+                        border: 2, 2, 2, 2
+                        border_color: 1, 0, 0, 1
+                        border_width: 2
+                        border_radius: [15]
+                        size_hint: (0.3, 0.1)
+                        pos_hint: {'center_x': 0.5, 'center_y': 0.5}
+                    Label:
+                        id: name_label
+                        text: ""
+                    Button:
+                        id: button
+                        text: "right"
+                        on_press: root.right_press(self)
+                        on_release: root.right_release(self)
+                    Label:
+                        id: name_label
+                        text: ""
+                    Button:
+                        id: button
+                        text: "backward"
+                        on_press: root.backward_press(self)
+                        on_release: root.backward_release(self)
+
+                BoxLayout:
+                    orientation: 'vertical'
+                    padding: 20
+
+                    GridLayout:
+                        id: control_grid
+                        cols: 3
+
+                
+
+                        Label:
+                            id: name_label
+                            text: ""
+                        Button:
+                            id: rot_up_button
+                            text: "U"
+                            on_release: root.on_rot_up_button_press()                            
+                        Label:
+                            id: name_label
+                            text: ""
+                        Button:
+                            id: rot_left_button
+                            text: "L"
+                            on_release: root.on_rot_left_button_press()            
+                        Label:
+                            id: name_label
+                            text: ""
+                        Button:
+                            id: rot_right_button
+                            text: "R"
+                            on_release: root.on_rot_right_button_press()
+                        Label:
+                            id: name_label
+                            text: ""
+                        Button:
+                            id: rot_down_button
+                            text: "D"
+                            on_release: root.on_rot_down_button_press()
+
+                    BoxLayout:
+                        orientation: 'vertical'
+                        padding: 10
+
+                        Button:
+                            id: fire_button
+                            text: "Fire"
+                            background_normal: ''
+                            background_color: 0, 0, 1, 1
+
+                            on_press: root.fire_press()
+                            on_release: root.fire_release()
+
+
+
+                    Label:
+                        id: touch_label
+                        text: "Turret Control"
+
+    TabbedPanelItem:
+        text: 'Settings'
+        background_color: 0, 1, 1, 1
+
+        GridLayout:
+            id: setting_grid
+            cols: 1
+            GridLayout:
+                cols: 2
+                Label:
+                    id: motor_speed_label
+                    text: "Motor Speed: 200"
+                Slider:
+                    id: motor_speed
+                    min: 0
+                    max: 255
+                    value: 200
+                    on_value: root.update_slider_label(*args)
+                Spinner:
+                    id: my_spinner
+                    text: '172.20.10.3'
+                    values: ['172.20.10.3', '192.168.1.209', '172.20.10.2', '192.168.43.159', '172.20.10.4']
+                    on_text: root.on_spinner_select(self.text)
+
+                Button:
+                    id: headlight
+                    text: 'Headlight'
+                    on_release: root.toggle_headlight()
+                    
+
+            GridLayout:
+                cols: 3
+                Button:
+                    id: mosquitto_button
+                    text: 'Restart Mosquitto'
+                    on_release: root.restart_client()
+
+                Button:
+                    id: audio
+                    text: 'Audio'
+                    on_release: root.toggle_audio()
+                
+                Button:
+                    id: graph
+                    text: 'Generate graph'
+                    on_release: root.toggle_graph()
+
+        
+
+    TabbedPanelItem:
+        text: 'Screen'
+        background_color: 0, 1, 1, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            
+            Image:
+                id: image_widget_2
+                source: ''
+                size_hint_x: 1
+                size_hint_y: 1
+
+                allow_stretch: True
+            
+            Image:
+                id: image_widget_5
+                source: ''
+                size_hint_x: 1
+                size_hint_y: 1
+
+                allow_stretch: True
+
+    
+    TabbedPanelItem:
+        text: 'Ultrasonic'
+        background_color: 0, 1, 1, 1
+
+        GridLayout:
+            id: ultrasonic_grid
+            cols: 1
+                    
+            GridLayout:
+                cols: 3
+                size_hint: 0.5, 0.2
+                Label:
+                    text: ""
+                
+                Label:
+                    id: ultrasonic_label_1
+                    text: 'Top'
+                    font_size: 24
+                    color: 0, 0, 0, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 0.2  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Label:
+                    text: ""
+            GridLayout:
+                cols: 3
+
+                Label:
+                    id: ultrasonic_label_2_proximity
+                    text: 'left'
+                    size_hint: 0.2, 1
+                    
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 1  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Image:
+                    id: image_widget_3
+                    source: 'car.png'
+                    size_hint: 1, 1
+                    allow_stretch: True
+                Label:
+                    id: ultrasonic_label_4_proximity
+                    text: 'right'
+                    size_hint: 0.2, 1
+                    color: 0, 1, 0, 1  # Text color (Red)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 1  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+
+            GridLayout:
+                cols: 3
+                size_hint: 0.5, 0.2
+                Label:
+                    text: ""    
+                Label:
+                    id: ultrasonic_label_3
+                    text: 'Bottom'
+                    color: 1, 0, 0, 1  # Text color (Red)
+                    canvas.before:
+                        Color:
+                            rgba: 0, 1, 0, 1  # Background color (Red)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                Label:
+                    text: ""
+
+    TabbedPanelItem:
+        text: 'Sensors'
+        background_color: 0, 1, 1, 1
+        
+        GridLayout:
+            cols: 2
+
+            Label:
+                text: "Dust Level"
+                font_size: 24
+                color: 0, 0, 0, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Label:
+                id: dust_label
+                text: "0 µg/m³"
+                font_size: 24
+                
+
+            Label:
+                text: "Rain Level"
+                font_size: 24
+                color: 0, 0, 0, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Label:
+                id: rain_label
+                text: "0 L/m²"
+                font_size: 24
+
+            Label:
+                text: "Vibration"
+                font_size: 24
+                color: 0, 0, 0, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Label:
+                id: vibration_label
+                text: "0 m/s²"
+                font_size: 24
+
+            Label:
+                text: "Flame Level"
+                font_size: 24
+                color: 0, 0, 0, 1
+
+                canvas.before:
+                    Color:
+                        rgba: 0, 1, 1, 0.5
+                    Rectangle:
+                        pos: self.pos
+                        size: self.size
+            
+            Label:
+                id: flame_label
+                text: "0"
+                font_size: 24
+
+        
+                
+    TabbedPanelItem:
+        text: 'Graphs'
+        background_color: 0, 1, 1, 1
+
+        BoxLayout:
+            orientation: 'vertical'
+            
+            GridLayout:
+                cols: 2
+                id: live_plot_placeholder
+                
+                
+        
+            
+            
+
+
