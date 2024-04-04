@@ -39,22 +39,41 @@ import math
 import paho.mqtt.client as mqtt
 
 import paho.mqtt.publish as publish
-import pyaudio
 import wave
 
-CHUNK = 1024
-FORMAT = pyaudio.paInt16
-CHANNELS = 2
-RATE = 44100
+import socket
+import pyaudio
 
-p = pyaudio.PyAudio()
+# Client configuration
+HOST = '172.20.10.4'
+PORT = 1495
 
-stream = p.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+try:
+    CHUNK = 1024
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 2
+    RATE = 44100
+
+    audio = pyaudio.PyAudio()
+
+    # Set up socket
+    client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    client_socket.connect((HOST, PORT))
+
+    FORMAT = pyaudio.paInt16
+    CHANNELS = 1
+    RATE = 44100
+    CHUNK = 1024
+
+    stream = audio.open(format=FORMAT, channels=CHANNELS, rate=RATE, input=True, frames_per_buffer=CHUNK)
+except:
+    pass
 
 
-# 172.20.10.3 192.168.43.159
 
-broker_address = "172.20.10.3"
+# 172.20.10.3 192.168.43.159 192.168.1.209
+
+broker_address = "172.20.10.4"
 broker_port = 1883
 client_id = "window2"
 
@@ -82,8 +101,8 @@ camera = "camera"
 dust = "dust"
 rain = "rain"
 vibration = "vibration"
-infrared = "infrared"
-
+temperature1 = "temperature1"
+temperature2 = "temperature2"
 
 
 ultrasonic_message_1 = 0
@@ -101,7 +120,7 @@ flame_message_3 = 0
 flame_message_4 = 0
 flame_message_5 = 0
 
-rain_message = 0
+rain_message = 444
 dust_message = 0
 vibration_message = 0
 infrared_message = 0
@@ -110,6 +129,9 @@ acceleration_message = "0,0,0"
 acceleration_message_1 = 0
 acceleration_message_2 = 1
 acceleration_message_3 = 2
+
+temperature_message_1 = 0
+temperature_message_2 = 0
 
 gyro_message = "0,0,0"
 
@@ -392,7 +414,7 @@ class Grid(TabbedPanel):
 
             self.ultrasonic_label_4_proximity.canvas.before.clear()  
             self.ultrasonic_label_4_proximity.canvas.before.add(Color(0, 1, 0, 0.9))  
-            self.ultrasonic_label_4_proximity.canvas.before.add(Rectangle(pos=self.ultrasonic_label_4_proximity.pos, size=(self.ultrasonic_label_4_proximity.size[0], (ultrasonic_value_2 / 100) * self.ultrasonic_label_4_proximity.size[1])))
+            self.ultrasonic_label_4_proximity.canvas.before.add(Rectangle(pos=self.ultrasonic_label_4_proximity.pos, size=(self.ultrasonic_label_4_proximity.size[0], (ultrasonic_value_4 / 100) * self.ultrasonic_label_4_proximity.size[1])))
 
         else:
             self.ultrasonic_label_4.canvas.before.clear() 
@@ -401,7 +423,7 @@ class Grid(TabbedPanel):
 
             self.ultrasonic_label_4_proximity.canvas.before.clear()  
             self.ultrasonic_label_4_proximity.canvas.before.add(Color(1, 0, 0, 0.9))  
-            self.ultrasonic_label_4_proximity.canvas.before.add(Rectangle(pos=self.ultrasonic_label_4_proximity.pos, size=(self.ultrasonic_label_4_proximity.size[0], (ultrasonic_value_2 / 100) * self.ultrasonic_label_4_proximity.size[1])))
+            self.ultrasonic_label_4_proximity.canvas.before.add(Rectangle(pos=self.ultrasonic_label_4_proximity.pos, size=(self.ultrasonic_label_4_proximity.size[0], (ultrasonic_value_4 / 100) * self.ultrasonic_label_4_proximity.size[1])))
 
         if smoke_message_1 == "0" or smoke_message_2 == "0":
             self.smoke_label.canvas.before.clear()
@@ -442,13 +464,18 @@ class Grid(TabbedPanel):
         self.ids.dust_label.text = f"{dust_message} µg/m³"
         self.ids.rain_label.text = f"{rain_message} L/m²"
         self.ids.vibration_label.text = f"{dust_message} m/s²"
-        self.ids.flame_label.text = f"{((flame_message_1 + flame_message_2 + flame_message_3 + flame_message_4 + flame_message_5)/5)}"
+        self.ids.infrared_label.text = f"{temperature1} C"
+
+        self.ids.flame_label.text = f"{((flame_message_1))}"
         
+        print("rain")
+        print(rain_message)
 
     @mainthread
     def audio_play(self):
         data = stream.read(CHUNK)
-        publish.single(audio, data, hostname=broker_address)
+        # Send audio data to server
+        client_socket.sendall(data)
 
     def toggle_audio(self):
         if self.is_playing:
@@ -819,29 +846,25 @@ class Grid(TabbedPanel):
     @mainthread
     def on_message(self, client, userdata, message):
 
-        global ultrasonic_message_1, ultrasonic_message_2, ultrasonic_message_3, ultrasonic_message_4, smoke_message
+        global ultrasonic_message_1, ultrasonic_message_2, ultrasonic_message_3, ultrasonic_message_4, smoke_message, rain_message, dust_message
         message_1 = str(message.payload.decode("utf-8"))
         
 
         if message.topic == ultrasonic1:
             ultrasonic_message_1 = float(message.payload.decode("utf-8"))
-            print(ultrasonic_message_1)
-            print(message.topic)
+            
 
         if message.topic == ultrasonic2:
             ultrasonic_message_2 = float(message.payload.decode("utf-8"))
-            print(ultrasonic_message_2)
-            print(message.topic)
+            
 
         if message.topic == ultrasonic3:
             ultrasonic_message_3 = float(message.payload.decode("utf-8"))
-            print(ultrasonic_message_3)
-            print(message.topic)
+            
 
         if message.topic == ultrasonic4:
             ultrasonic_message_4 = float(message.payload.decode("utf-8"))
-            print(ultrasonic_message_4)
-            print(message.topic)
+            
         
 
         if message.topic == smoke1:
@@ -872,13 +895,19 @@ class Grid(TabbedPanel):
             dust_message = float(message.payload.decode("utf-8"))
 
         if message.topic == rain:
-            rain_message = float(message.payload.decode("utf-8"))
+            print("rarrrrr")
+     
+            rain_message = message.payload.decode("utf-8")
+            
 
         if message.topic == vibration:
             vibration_message = float(message.payload.decode("utf-8"))
 
-        if message.topic == infrared:
-            infrared_message = float(message.payload.decode("utf-8"))
+        if message.topic == temperature1:
+            temperature_message_1 = float(message.payload.decode("utf-8"))
+
+        if message.topic == temperature2:
+            temperature_message_2 = float(message.payload.decode("utf-8"))
         
         if message.topic == acceleration:
             message = message.payload.decode("utf-8")
@@ -936,7 +965,8 @@ class Grid(TabbedPanel):
         self.client.subscribe(dust)
         self.client.subscribe(rain)
         self.client.subscribe(vibration)
-        self.client.subscribe(infrared)
+        self.client.subscribe(temperature1)
+        self.client.subscribe(temperature2)
 
 
         print("topiicccccc")
